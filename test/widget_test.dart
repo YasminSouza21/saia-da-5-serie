@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter/material.dart';
 import 'package:saia_da_5_serie/main.dart';
 
 void main() {
@@ -21,5 +22,27 @@ void main() {
     await tester.tap(find.text('Perfil'));
     await tester.pumpAndSettle();
     expect(find.text('Acompanhe sua jornada de aprendizagem.'), findsOneWidget);
+
+    await tester.tap(find.text('Receitas'));
+    await tester.pumpAndSettle();
+    expect(find.text('Nome da receita'), findsOneWidget);
+
+    await tester.tap(find.text('Pesquisar receita'));
+    await tester.pump();
+    expect(find.text('Digite o nome de uma receita para pesquisar.'),
+        findsOneWidget);
+
+    await tester.enterText(find.byType(TextField), '  bolo   de   cenoura  ');
+    await tester.tap(find.text('Pesquisar receita'));
+    await tester.pump();
+    expect(
+      find.text('Pesquisa realizada para “bolo de cenoura”.',
+          findRichText: true),
+      findsOneWidget,
+    );
+
+    await tester.tap(find.text('Nova pesquisa'));
+    await tester.pump();
+    expect(find.text('Qual receita você quer encontrar?'), findsOneWidget);
   });
 }

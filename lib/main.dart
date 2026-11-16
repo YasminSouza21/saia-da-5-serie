@@ -56,6 +56,8 @@ class _HomePageState extends State<HomePage> {
         return const AchievementsPage();
       case 3:
         return const ProfilePage();
+      case 4:
+        return const RecipeSearchPage();
       default:
         return _buildHomePage();
     }
@@ -425,6 +427,11 @@ class _HomePageState extends State<HomePage> {
           selectedIcon: Icon(Icons.person_rounded, color: _purple),
           label: 'Perfil',
         ),
+        NavigationDestination(
+          icon: Icon(Icons.restaurant_menu_outlined),
+          selectedIcon: Icon(Icons.restaurant_menu_rounded, color: _purple),
+          label: 'Receitas',
+        ),
       ],
     );
   }
@@ -448,6 +455,255 @@ class _PrimaryButton extends StatelessWidget {
         textStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.w800),
       ),
       child: Text(label),
+    );
+  }
+}
+
+class RecipeSearchPage extends StatefulWidget {
+  const RecipeSearchPage({super.key});
+
+  @override
+  State<RecipeSearchPage> createState() => _RecipeSearchPageState();
+}
+
+class _RecipeSearchPageState extends State<RecipeSearchPage> {
+  final _recipeController = TextEditingController();
+  final _recipeFocusNode = FocusNode();
+  String? _searchedTerm;
+  String? _errorMessage;
+
+  @override
+  void dispose() {
+    _recipeController.dispose();
+    _recipeFocusNode.dispose();
+    super.dispose();
+  }
+
+  void _searchRecipe() {
+    final normalizedTerm =
+        _recipeController.text.trim().replaceAll(RegExp(r'\s+'), ' ');
+
+    if (normalizedTerm.isEmpty) {
+      setState(() {
+        _errorMessage = 'Digite o nome de uma receita para pesquisar.';
+      });
+      _recipeFocusNode.requestFocus();
+      return;
+    }
+
+    setState(() {
+      _errorMessage = null;
+      _searchedTerm = normalizedTerm;
+    });
+  }
+
+  void _newSearch() {
+    setState(() {
+      _recipeController.clear();
+      _errorMessage = null;
+      _searchedTerm = null;
+    });
+    _recipeFocusNode.requestFocus();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.fromLTRB(24, 24, 24, 36),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const _PageHeader(
+              title: 'Pesquisar receitas',
+              subtitle: 'Encontre uma ideia gostosa para preparar.',
+            ),
+            const SizedBox(height: 26),
+            TextField(
+              controller: _recipeController,
+              focusNode: _recipeFocusNode,
+              textInputAction: TextInputAction.search,
+              onSubmitted: (_) => _searchRecipe(),
+              decoration: InputDecoration(
+                labelText: 'Nome da receita',
+                hintText: 'Ex.: bolo de cenoura',
+                prefixIcon: const Icon(Icons.search_rounded),
+                suffixIcon: _recipeController.text.isEmpty
+                    ? null
+                    : IconButton(
+                        onPressed: () {
+                          setState(() {
+                            _recipeController.clear();
+                            _errorMessage = null;
+                          });
+                        },
+                        tooltip: 'Limpar pesquisa',
+                        icon: const Icon(Icons.clear_rounded),
+                      ),
+                filled: true,
+                fillColor: Colors.white,
+                errorText: _errorMessage,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(18),
+                  borderSide: const BorderSide(color: Color(0xFFEDEAF5)),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(18),
+                  borderSide: const BorderSide(color: Color(0xFFEDEAF5)),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(18),
+                  borderSide:
+                      const BorderSide(color: Color(0xFF6C4AE8), width: 1.5),
+                ),
+                errorBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(18),
+                  borderSide: const BorderSide(color: Color(0xFFD1435B)),
+                ),
+                focusedErrorBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(18),
+                  borderSide:
+                      const BorderSide(color: Color(0xFFD1435B), width: 1.5),
+                ),
+              ),
+            ),
+            const SizedBox(height: 14),
+            SizedBox(
+              width: double.infinity,
+              child: FilledButton.icon(
+                onPressed: _searchRecipe,
+                icon: const Icon(Icons.search_rounded),
+                label: const Text('Pesquisar receita'),
+                style: FilledButton.styleFrom(
+                  backgroundColor: const Color(0xFF6C4AE8),
+                  padding: const EdgeInsets.symmetric(vertical: 15),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16)),
+                  textStyle: const TextStyle(fontWeight: FontWeight.w800),
+                ),
+              ),
+            ),
+            const SizedBox(height: 28),
+            if (_searchedTerm == null) _buildEmptyState(),
+            if (_searchedTerm != null) _buildSearchFeedback(),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildEmptyState() {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 34),
+      decoration: BoxDecoration(
+        color: const Color(0xFFEDE8FF),
+        borderRadius: BorderRadius.circular(24),
+      ),
+      child: const Column(
+        children: [
+          Icon(Icons.restaurant_rounded, color: Color(0xFF6C4AE8), size: 48),
+          SizedBox(height: 14),
+          Text(
+            'Qual receita você quer encontrar?',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+                color: Color(0xFF24213A),
+                fontSize: 17,
+                fontWeight: FontWeight.w800),
+          ),
+          SizedBox(height: 6),
+          Text(
+            'Digite um nome acima e toque em “Pesquisar receita”.',
+            textAlign: TextAlign.center,
+            style:
+                TextStyle(color: Color(0xFF77738B), fontSize: 12, height: 1.4),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSearchFeedback() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          width: double.infinity,
+          padding: const EdgeInsets.all(18),
+          decoration: BoxDecoration(
+            color: const Color(0xFFDDF5E9),
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(color: const Color(0xFFBCE6CF)),
+          ),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Icon(Icons.check_circle_rounded, color: Color(0xFF2F925D)),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Text.rich(
+                  TextSpan(
+                    text: 'Pesquisa realizada para ',
+                    style: const TextStyle(
+                        color: Color(0xFF276B48), fontSize: 13, height: 1.4),
+                    children: [
+                      TextSpan(
+                        text: '“$_searchedTerm”',
+                        style: const TextStyle(fontWeight: FontWeight.w800),
+                      ),
+                      const TextSpan(text: '.'),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 22),
+        const Text(
+          'Resultados provisórios',
+          style: TextStyle(
+              color: Color(0xFF24213A),
+              fontSize: 18,
+              fontWeight: FontWeight.w800),
+        ),
+        const SizedBox(height: 12),
+        Container(
+          width: double.infinity,
+          padding: const EdgeInsets.all(18),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(color: const Color(0xFFEDEAF5)),
+          ),
+          child: const Row(
+            children: [
+              Icon(Icons.menu_book_rounded, color: Color(0xFFE67C3B), size: 34),
+              SizedBox(width: 13),
+              Expanded(
+                child: Text(
+                  'Os resultados da receita aparecerão aqui.',
+                  style: TextStyle(
+                      color: Color(0xFF77738B), fontSize: 12, height: 1.4),
+                ),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 16),
+        OutlinedButton.icon(
+          onPressed: _newSearch,
+          icon: const Icon(Icons.refresh_rounded),
+          label: const Text('Nova pesquisa'),
+          style: OutlinedButton.styleFrom(
+            foregroundColor: const Color(0xFF6C4AE8),
+            side: const BorderSide(color: Color(0xFF6C4AE8)),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+          ),
+        ),
+      ],
     );
   }
 }

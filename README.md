@@ -8,6 +8,8 @@ O aplicativo é uma central de estudos leve e divertida para estudantes que est�
 
 Além da página principal exigida na atividade, o projeto já possui layouts complementares para Aprender, Conquistas e Perfil, acessíveis pela navegação inferior.
 
+A tela Receitas atende à Atividade 02 com um campo rotulado para o nome da receita, botão explícito de pesquisa, validação de consultas vazias, tratamento de espaços, feedback do termo válido e botão para iniciar uma nova pesquisa.
+
 ## Como executar
 
 Com o Flutter instalado, execute:
