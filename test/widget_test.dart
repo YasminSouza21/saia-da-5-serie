@@ -41,6 +41,7 @@ void main() {
       findsOneWidget,
     );
 
+    await tester.ensureVisible(find.text('Nova pesquisa'));
     await tester.tap(find.text('Nova pesquisa'));
     await tester.pump();
     expect(find.text('Qual receita você quer encontrar?'), findsOneWidget);
