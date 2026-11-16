@@ -26,49 +26,73 @@ class SaiaDa5SerieApp extends StatelessWidget {
   }
 }
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
   static const _purple = Color(0xFF6C4AE8);
   static const _ink = Color(0xFF24213A);
   static const _muted = Color(0xFF77738B);
 
+  int _selectedIndex = 0;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: CustomScrollView(
-          slivers: [
-            SliverPadding(
-              padding: const EdgeInsets.fromLTRB(24, 20, 24, 36),
-              sliver: SliverList(
-                delegate: SliverChildListDelegate([
-                  _buildHeader(),
-                  const SizedBox(height: 28),
-                  _buildWelcomeCard(),
-                  const SizedBox(height: 28),
-                  _buildSectionTitle(
-                    title: 'Continue de onde parou',
-                    action: 'Ver tudo',
-                  ),
-                  const SizedBox(height: 14),
-                  _buildProgressCard(),
-                  const SizedBox(height: 28),
-                  _buildSectionTitle(
-                    title: 'Explore as matérias',
-                    action: 'Todas as matérias',
-                  ),
-                  const SizedBox(height: 14),
-                  _buildSubjects(),
-                  const SizedBox(height: 28),
-                  _buildChallengeCard(),
-                ]),
-              ),
-            ),
-          ],
-        ),
-      ),
+      body: _buildCurrentPage(),
       bottomNavigationBar: _buildBottomNavigationBar(),
+    );
+  }
+
+  Widget _buildCurrentPage() {
+    switch (_selectedIndex) {
+      case 1:
+        return const LearnPage();
+      case 2:
+        return const AchievementsPage();
+      case 3:
+        return const ProfilePage();
+      default:
+        return _buildHomePage();
+    }
+  }
+
+  Widget _buildHomePage() {
+    return SafeArea(
+      child: CustomScrollView(
+        slivers: [
+          SliverPadding(
+            padding: const EdgeInsets.fromLTRB(24, 20, 24, 36),
+            sliver: SliverList(
+              delegate: SliverChildListDelegate([
+                _buildHeader(),
+                const SizedBox(height: 28),
+                _buildWelcomeCard(),
+                const SizedBox(height: 28),
+                _buildSectionTitle(
+                  title: 'Continue de onde parou',
+                  action: 'Ver tudo',
+                ),
+                const SizedBox(height: 14),
+                _buildProgressCard(),
+                const SizedBox(height: 28),
+                _buildSectionTitle(
+                  title: 'Explore as matérias',
+                  action: 'Todas as matérias',
+                ),
+                const SizedBox(height: 14),
+                _buildSubjects(),
+                const SizedBox(height: 28),
+                _buildChallengeCard(),
+              ]),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -373,7 +397,10 @@ class HomePage extends StatelessWidget {
 
   Widget _buildBottomNavigationBar() {
     return NavigationBar(
-      selectedIndex: 0,
+      selectedIndex: _selectedIndex,
+      onDestinationSelected: (index) {
+        setState(() => _selectedIndex = index);
+      },
       backgroundColor: Colors.white,
       indicatorColor: const Color(0xFFEDE8FF),
       height: 76,
@@ -421,6 +448,616 @@ class _PrimaryButton extends StatelessWidget {
         textStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.w800),
       ),
       child: Text(label),
+    );
+  }
+}
+
+class LearnPage extends StatelessWidget {
+  const LearnPage({super.key});
+
+  static const _purple = Color(0xFF6C4AE8);
+  static const _ink = Color(0xFF24213A);
+  static const _muted = Color(0xFF77738B);
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.fromLTRB(24, 24, 24, 36),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const _PageHeader(
+              title: 'Aprender',
+              subtitle: 'Escolha uma matéria e avance no seu ritmo.',
+            ),
+            const SizedBox(height: 24),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: const Color(0xFFEDEAF5)),
+              ),
+              child: const Row(
+                children: [
+                  Icon(Icons.search_rounded, color: _muted),
+                  SizedBox(width: 10),
+                  Text(
+                    'Buscar uma aula ou assunto',
+                    style: TextStyle(color: _muted, fontSize: 13),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 28),
+            const Text(
+              'Suas trilhas',
+              style: TextStyle(
+                color: _ink,
+                fontSize: 18,
+                fontWeight: FontWeight.w800,
+              ),
+            ),
+            const SizedBox(height: 14),
+            const _LessonCard(
+              icon: Icons.calculate_rounded,
+              iconBackground: Color(0xFFEDE8FF),
+              iconColor: _purple,
+              subject: 'Matemática',
+              lesson: 'Frações e números decimais',
+              progress: 0.68,
+              progressLabel: '68% concluído',
+            ),
+            const SizedBox(height: 12),
+            const _LessonCard(
+              icon: Icons.menu_book_rounded,
+              iconBackground: Color(0xFFFFE8D4),
+              iconColor: Color(0xFFE67C3B),
+              subject: 'Português',
+              lesson: 'Classes gramaticais',
+              progress: 0.35,
+              progressLabel: '35% concluído',
+            ),
+            const SizedBox(height: 28),
+            const Text(
+              'Todas as matérias',
+              style: TextStyle(
+                color: _ink,
+                fontSize: 18,
+                fontWeight: FontWeight.w800,
+              ),
+            ),
+            const SizedBox(height: 14),
+            Wrap(
+              spacing: 10,
+              runSpacing: 10,
+              children: const [
+                _SubjectChip(
+                  label: 'Ciências',
+                  icon: Icons.science_rounded,
+                  color: Color(0xFF3EAA72),
+                ),
+                _SubjectChip(
+                  label: 'História',
+                  icon: Icons.public_rounded,
+                  color: Color(0xFFE85C7A),
+                ),
+                _SubjectChip(
+                  label: 'Geografia',
+                  icon: Icons.explore_rounded,
+                  color: Color(0xFF4C8ED9),
+                ),
+                _SubjectChip(
+                  label: 'Artes',
+                  icon: Icons.palette_rounded,
+                  color: Color(0xFF9A6CDA),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class AchievementsPage extends StatelessWidget {
+  const AchievementsPage({super.key});
+
+  static const _ink = Color(0xFF24213A);
+  static const _muted = Color(0xFF77738B);
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.fromLTRB(24, 24, 24, 36),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const _PageHeader(
+              title: 'Conquistas',
+              subtitle: 'Cada passo seu merece ser comemorado.',
+            ),
+            const SizedBox(height: 24),
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(22),
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  colors: [Color(0xFF7250F0), Color(0xFF5C3DD2)],
+                ),
+                borderRadius: BorderRadius.circular(26),
+              ),
+              child: const Row(
+                children: [
+                  Icon(Icons.emoji_events_rounded,
+                      color: Color(0xFFFFD36E), size: 54),
+                  SizedBox(width: 16),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Você está mandando bem!',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w800,
+                          ),
+                        ),
+                        SizedBox(height: 6),
+                        Text(
+                          'Continue estudando para desbloquear novas medalhas.',
+                          style: TextStyle(
+                            color: Color(0xFFE9E3FF),
+                            fontSize: 12,
+                            height: 1.35,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 24),
+            Row(
+              children: const [
+                Expanded(
+                    child: _AchievementStat(
+                        value: '1.240', label: 'XP acumulado')),
+                SizedBox(width: 10),
+                Expanded(
+                    child: _AchievementStat(value: '8', label: 'medalhas')),
+                SizedBox(width: 10),
+                Expanded(
+                    child:
+                        _AchievementStat(value: '5 dias', label: 'sequência')),
+              ],
+            ),
+            const SizedBox(height: 28),
+            const Text(
+              'Medalhas em destaque',
+              style: TextStyle(
+                color: _ink,
+                fontSize: 18,
+                fontWeight: FontWeight.w800,
+              ),
+            ),
+            const SizedBox(height: 14),
+            const _BadgeCard(
+              icon: Icons.local_fire_department_rounded,
+              color: Color(0xFFE85C7A),
+              title: 'Fogo nos estudos',
+              description: 'Estudou por 5 dias seguidos.',
+            ),
+            const SizedBox(height: 12),
+            const _BadgeCard(
+              icon: Icons.menu_book_rounded,
+              color: Color(0xFF4C8ED9),
+              title: 'Leitor curioso',
+              description: 'Completou 10 aulas de Português.',
+            ),
+            const SizedBox(height: 12),
+            const _BadgeCard(
+              icon: Icons.lock_rounded,
+              color: Color(0xFFB7B2C7),
+              title: 'Mestre das ciências',
+              description: 'Falta completar 2 desafios.',
+              locked: true,
+            ),
+            const SizedBox(height: 24),
+            const Text(
+              'A próxima conquista está logo ali.',
+              style: TextStyle(color: _muted, fontSize: 13),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class ProfilePage extends StatelessWidget {
+  const ProfilePage({super.key});
+
+  static const _purple = Color(0xFF6C4AE8);
+  static const _ink = Color(0xFF24213A);
+  static const _muted = Color(0xFF77738B);
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.fromLTRB(24, 24, 24, 36),
+        child: Column(
+          children: [
+            const _PageHeader(
+              title: 'Meu perfil',
+              subtitle: 'Acompanhe sua jornada de aprendizagem.',
+            ),
+            const SizedBox(height: 28),
+            const CircleAvatar(
+              radius: 42,
+              backgroundColor: Color(0xFFFFD7B5),
+              child:
+                  Icon(Icons.face_rounded, color: Color(0xFF9A5C3A), size: 42),
+            ),
+            const SizedBox(height: 12),
+            const Text(
+              'Estudante',
+              style: TextStyle(
+                color: _ink,
+                fontSize: 20,
+                fontWeight: FontWeight.w800,
+              ),
+            ),
+            const SizedBox(height: 4),
+            const Text('Nível 4 · Explorador do conhecimento',
+                style: TextStyle(color: _muted, fontSize: 12)),
+            const SizedBox(height: 22),
+            Container(
+              padding: const EdgeInsets.all(18),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(22),
+                border: Border.all(color: const Color(0xFFEDEAF5)),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: const [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          'Progresso geral',
+                          style: TextStyle(
+                              color: _ink,
+                              fontSize: 15,
+                              fontWeight: FontWeight.w800),
+                        ),
+                      ),
+                      Text('42%',
+                          style: TextStyle(
+                              color: _purple, fontWeight: FontWeight.w800)),
+                    ],
+                  ),
+                  SizedBox(height: 12),
+                  LinearProgressIndicator(
+                    value: 0.42,
+                    minHeight: 8,
+                    borderRadius: BorderRadius.all(Radius.circular(8)),
+                    backgroundColor: Color(0xFFEDEAF5),
+                    valueColor: AlwaysStoppedAnimation<Color>(_purple),
+                  ),
+                  SizedBox(height: 10),
+                  Text('Você já completou 12 de 28 aulas.',
+                      style: TextStyle(color: _muted, fontSize: 12)),
+                ],
+              ),
+            ),
+            const SizedBox(height: 24),
+            const _ProfileOption(
+                icon: Icons.settings_outlined,
+                title: 'Configurações',
+                subtitle: 'Preferências do aplicativo'),
+            const SizedBox(height: 10),
+            const _ProfileOption(
+                icon: Icons.notifications_none_rounded,
+                title: 'Notificações',
+                subtitle: 'Lembretes de estudo'),
+            const SizedBox(height: 10),
+            const _ProfileOption(
+                icon: Icons.help_outline_rounded,
+                title: 'Ajuda',
+                subtitle: 'Dúvidas e suporte'),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _PageHeader extends StatelessWidget {
+  const _PageHeader({required this.title, required this.subtitle});
+
+  final String title;
+  final String subtitle;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          style: const TextStyle(
+            color: Color(0xFF24213A),
+            fontSize: 28,
+            fontWeight: FontWeight.w800,
+            letterSpacing: -0.7,
+          ),
+        ),
+        const SizedBox(height: 5),
+        Text(subtitle,
+            style: const TextStyle(color: Color(0xFF77738B), fontSize: 13)),
+      ],
+    );
+  }
+}
+
+class _LessonCard extends StatelessWidget {
+  const _LessonCard({
+    required this.icon,
+    required this.iconBackground,
+    required this.iconColor,
+    required this.subject,
+    required this.lesson,
+    required this.progress,
+    required this.progressLabel,
+  });
+
+  final IconData icon;
+  final Color iconBackground;
+  final Color iconColor;
+  final String subject;
+  final String lesson;
+  final double progress;
+  final String progressLabel;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: const Color(0xFFEDEAF5)),
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 48,
+            height: 48,
+            decoration: BoxDecoration(
+                color: iconBackground, borderRadius: BorderRadius.circular(14)),
+            child: Icon(icon, color: iconColor),
+          ),
+          const SizedBox(width: 13),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(subject,
+                    style: const TextStyle(
+                        color: Color(0xFF24213A),
+                        fontSize: 14,
+                        fontWeight: FontWeight.w800)),
+                const SizedBox(height: 4),
+                Text(lesson,
+                    style: const TextStyle(
+                        color: Color(0xFF77738B), fontSize: 11.5)),
+                const SizedBox(height: 10),
+                LinearProgressIndicator(
+                  value: progress,
+                  minHeight: 6,
+                  borderRadius: const BorderRadius.all(Radius.circular(8)),
+                  backgroundColor: const Color(0xFFEDEAF5),
+                  valueColor: AlwaysStoppedAnimation<Color>(iconColor),
+                ),
+                const SizedBox(height: 5),
+                Text(progressLabel,
+                    style: TextStyle(
+                        color: iconColor,
+                        fontSize: 10,
+                        fontWeight: FontWeight.w700)),
+              ],
+            ),
+          ),
+          const SizedBox(width: 10),
+          Icon(Icons.chevron_right_rounded, color: iconColor),
+        ],
+      ),
+    );
+  }
+}
+
+class _SubjectChip extends StatelessWidget {
+  const _SubjectChip(
+      {required this.label, required this.icon, required this.color});
+
+  final String label;
+  final IconData icon;
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: const Color(0xFFEDEAF5)),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 18, color: color),
+          const SizedBox(width: 8),
+          Text(label,
+              style: const TextStyle(
+                  color: Color(0xFF24213A),
+                  fontSize: 12,
+                  fontWeight: FontWeight.w700)),
+        ],
+      ),
+    );
+  }
+}
+
+class _AchievementStat extends StatelessWidget {
+  const _AchievementStat({required this.value, required this.label});
+
+  final String value;
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: const Color(0xFFEDEAF5)),
+      ),
+      child: Column(
+        children: [
+          Text(value,
+              style: const TextStyle(
+                  color: Color(0xFF6C4AE8),
+                  fontSize: 16,
+                  fontWeight: FontWeight.w800)),
+          const SizedBox(height: 4),
+          Text(label,
+              textAlign: TextAlign.center,
+              style: const TextStyle(color: Color(0xFF77738B), fontSize: 10)),
+        ],
+      ),
+    );
+  }
+}
+
+class _BadgeCard extends StatelessWidget {
+  const _BadgeCard(
+      {required this.icon,
+      required this.color,
+      required this.title,
+      required this.description,
+      this.locked = false});
+
+  final IconData icon;
+  final Color color;
+  final String title;
+  final String description;
+  final bool locked;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(15),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: const Color(0xFFEDEAF5)),
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 46,
+            height: 46,
+            decoration: BoxDecoration(
+                color: color.withValues(alpha: 0.14),
+                borderRadius: BorderRadius.circular(14)),
+            child: Icon(icon, color: color),
+          ),
+          const SizedBox(width: 13),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(title,
+                    style: const TextStyle(
+                        color: Color(0xFF24213A),
+                        fontSize: 14,
+                        fontWeight: FontWeight.w800)),
+                const SizedBox(height: 4),
+                Text(description,
+                    style: const TextStyle(
+                        color: Color(0xFF77738B), fontSize: 11.5)),
+              ],
+            ),
+          ),
+          if (locked)
+            const Icon(Icons.lock_outline_rounded,
+                size: 19, color: Color(0xFFB7B2C7)),
+          if (!locked)
+            const Icon(Icons.check_circle_rounded,
+                size: 20, color: Color(0xFF3EAA72)),
+        ],
+      ),
+    );
+  }
+}
+
+class _ProfileOption extends StatelessWidget {
+  const _ProfileOption(
+      {required this.icon, required this.title, required this.subtitle});
+
+  final IconData icon;
+  final String title;
+  final String subtitle;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: const Color(0xFFEDEAF5)),
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 42,
+            height: 42,
+            decoration: BoxDecoration(
+                color: const Color(0xFFEDE8FF),
+                borderRadius: BorderRadius.circular(13)),
+            child: Icon(icon, color: const Color(0xFF6C4AE8)),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(title,
+                    style: const TextStyle(
+                        color: Color(0xFF24213A),
+                        fontSize: 14,
+                        fontWeight: FontWeight.w800)),
+                const SizedBox(height: 3),
+                Text(subtitle,
+                    style: const TextStyle(
+                        color: Color(0xFF77738B), fontSize: 11.5)),
+              ],
+            ),
+          ),
+          const Icon(Icons.chevron_right_rounded, color: Color(0xFFB7B2C7)),
+        ],
+      ),
     );
   }
 }
