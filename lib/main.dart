@@ -1,0 +1,426 @@
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(const SaiaDa5SerieApp());
+}
+
+class SaiaDa5SerieApp extends StatelessWidget {
+  const SaiaDa5SerieApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Saia da 5ª Série',
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        useMaterial3: true,
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color(0xFF6C4AE8),
+          brightness: Brightness.light,
+        ),
+        scaffoldBackgroundColor: const Color(0xFFF8F7FC),
+        fontFamily: 'Arial',
+      ),
+      home: const HomePage(),
+    );
+  }
+}
+
+class HomePage extends StatelessWidget {
+  const HomePage({super.key});
+
+  static const _purple = Color(0xFF6C4AE8);
+  static const _ink = Color(0xFF24213A);
+  static const _muted = Color(0xFF77738B);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: SafeArea(
+        child: CustomScrollView(
+          slivers: [
+            SliverPadding(
+              padding: const EdgeInsets.fromLTRB(24, 20, 24, 36),
+              sliver: SliverList(
+                delegate: SliverChildListDelegate([
+                  _buildHeader(),
+                  const SizedBox(height: 28),
+                  _buildWelcomeCard(),
+                  const SizedBox(height: 28),
+                  _buildSectionTitle(
+                    title: 'Continue de onde parou',
+                    action: 'Ver tudo',
+                  ),
+                  const SizedBox(height: 14),
+                  _buildProgressCard(),
+                  const SizedBox(height: 28),
+                  _buildSectionTitle(
+                    title: 'Explore as matérias',
+                    action: 'Todas as matérias',
+                  ),
+                  const SizedBox(height: 14),
+                  _buildSubjects(),
+                  const SizedBox(height: 28),
+                  _buildChallengeCard(),
+                ]),
+              ),
+            ),
+          ],
+        ),
+      ),
+      bottomNavigationBar: _buildBottomNavigationBar(),
+    );
+  }
+
+  Widget _buildHeader() {
+    return Row(
+      children: [
+        Container(
+          width: 48,
+          height: 48,
+          decoration: BoxDecoration(
+            color: _purple,
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: const Icon(Icons.auto_stories_rounded, color: Colors.white),
+        ),
+        const SizedBox(width: 12),
+        const Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Saia da 5ª Série',
+                style: TextStyle(
+                  color: _ink,
+                  fontSize: 19,
+                  fontWeight: FontWeight.w800,
+                  letterSpacing: -0.4,
+                ),
+              ),
+              SizedBox(height: 2),
+              Text(
+                'Aprender pode ser uma aventura.',
+                style: TextStyle(color: _muted, fontSize: 12.5),
+              ),
+            ],
+          ),
+        ),
+        IconButton(
+          onPressed: () {},
+          tooltip: 'Notificações',
+          icon: Icon(Icons.notifications_none_rounded, color: _ink),
+        ),
+        const CircleAvatar(
+          radius: 20,
+          backgroundColor: Color(0xFFFFD7B5),
+          child: Icon(Icons.face_rounded, color: Color(0xFF9A5C3A)),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildWelcomeCard() {
+    return Container(
+      padding: const EdgeInsets.fromLTRB(22, 22, 16, 18),
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          colors: [Color(0xFF7250F0), Color(0xFF5C3DD2)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(28),
+        boxShadow: const [
+          BoxShadow(
+            color: Color(0x226C4AE8),
+            blurRadius: 18,
+            offset: Offset(0, 10),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          const Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Olá, estudante! 👋',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 23,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+                SizedBox(height: 8),
+                Text(
+                  'Pronto para descobrir algo novo hoje?',
+                  style: TextStyle(
+                    color: Color(0xFFE9E3FF),
+                    fontSize: 14,
+                    height: 1.35,
+                  ),
+                ),
+                SizedBox(height: 18),
+                _PrimaryButton(label: 'Começar a estudar'),
+              ],
+            ),
+          ),
+          const SizedBox(width: 10),
+          const Icon(
+            Icons.rocket_launch_rounded,
+            size: 70,
+            color: Color(0xFFFFD36E),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSectionTitle({required String title, required String action}) {
+    return Row(
+      children: [
+        Expanded(
+          child: Text(
+            title,
+            style: const TextStyle(
+              color: _ink,
+              fontSize: 18,
+              fontWeight: FontWeight.w800,
+              letterSpacing: -0.3,
+            ),
+          ),
+        ),
+        Text(
+          action,
+          style: const TextStyle(
+            color: _purple,
+            fontSize: 12,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+        const SizedBox(width: 3),
+        const Icon(Icons.chevron_right_rounded, size: 18, color: _purple),
+      ],
+    );
+  }
+
+  Widget _buildProgressCard() {
+    return Container(
+      padding: const EdgeInsets.all(18),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(22),
+        border: Border.all(color: const Color(0xFFEDEAF5)),
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 52,
+            height: 52,
+            decoration: BoxDecoration(
+              color: const Color(0xFFEDE8FF),
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: const Icon(Icons.calculate_rounded, color: _purple),
+          ),
+          const SizedBox(width: 14),
+          const Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Matemática',
+                  style: TextStyle(
+                    color: _ink,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+                SizedBox(height: 5),
+                Text(
+                  'Frações e números decimais',
+                  style: TextStyle(color: _muted, fontSize: 12),
+                ),
+                SizedBox(height: 11),
+                LinearProgressIndicator(
+                  value: 0.68,
+                  minHeight: 7,
+                  borderRadius: BorderRadius.all(Radius.circular(8)),
+                  backgroundColor: Color(0xFFEDEAF5),
+                  valueColor: AlwaysStoppedAnimation<Color>(_purple),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(width: 14),
+          const Text(
+            '68%',
+            style: TextStyle(
+              color: _purple,
+              fontSize: 13,
+              fontWeight: FontWeight.w800,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSubjects() {
+    const subjects = [
+      (
+        'Português',
+        Icons.menu_book_rounded,
+        Color(0xFFFFE8D4),
+        Color(0xFFE67C3B),
+      ),
+      ('Ciências', Icons.science_rounded, Color(0xFFDDF5E9), Color(0xFF3EAA72)),
+      ('História', Icons.public_rounded, Color(0xFFFFE0E7), Color(0xFFE85C7A)),
+      (
+        'Geografia',
+        Icons.explore_rounded,
+        Color(0xFFDCEEFF),
+        Color(0xFF4C8ED9),
+      ),
+    ];
+
+    return SizedBox(
+      height: 128,
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        itemCount: subjects.length,
+        separatorBuilder: (_, __) => const SizedBox(width: 12),
+        itemBuilder: (context, index) {
+          final subject = subjects[index];
+          return Container(
+            width: 116,
+            padding: const EdgeInsets.all(14),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(color: const Color(0xFFEDEAF5)),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  width: 42,
+                  height: 42,
+                  decoration: BoxDecoration(
+                    color: subject.$3,
+                    borderRadius: BorderRadius.circular(13),
+                  ),
+                  child: Icon(subject.$2, color: subject.$4, size: 22),
+                ),
+                const Spacer(),
+                Text(
+                  subject.$1,
+                  style: const TextStyle(
+                    color: _ink,
+                    fontSize: 13,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildChallengeCard() {
+    return Container(
+      padding: const EdgeInsets.all(18),
+      decoration: BoxDecoration(
+        color: const Color(0xFFFFF4D9),
+        borderRadius: BorderRadius.circular(22),
+      ),
+      child: Row(
+        children: [
+          const Icon(
+            Icons.emoji_events_rounded,
+            color: Color(0xFFE99A20),
+            size: 42,
+          ),
+          const SizedBox(width: 14),
+          const Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Desafio do dia',
+                  style: TextStyle(
+                    color: _ink,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+                SizedBox(height: 4),
+                Text(
+                  'Responda 3 perguntas e ganhe XP!',
+                  style: TextStyle(color: _muted, fontSize: 12),
+                ),
+              ],
+            ),
+          ),
+          const Icon(Icons.arrow_forward_rounded, color: Color(0xFFE99A20)),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildBottomNavigationBar() {
+    return NavigationBar(
+      selectedIndex: 0,
+      backgroundColor: Colors.white,
+      indicatorColor: const Color(0xFFEDE8FF),
+      height: 76,
+      destinations: const [
+        NavigationDestination(
+          icon: Icon(Icons.home_outlined),
+          selectedIcon: Icon(Icons.home_rounded, color: _purple),
+          label: 'Início',
+        ),
+        NavigationDestination(
+          icon: Icon(Icons.school_outlined),
+          selectedIcon: Icon(Icons.school_rounded, color: _purple),
+          label: 'Aprender',
+        ),
+        NavigationDestination(
+          icon: Icon(Icons.emoji_events_outlined),
+          selectedIcon: Icon(Icons.emoji_events_rounded, color: _purple),
+          label: 'Conquistas',
+        ),
+        NavigationDestination(
+          icon: Icon(Icons.person_outline_rounded),
+          selectedIcon: Icon(Icons.person_rounded, color: _purple),
+          label: 'Perfil',
+        ),
+      ],
+    );
+  }
+}
+
+class _PrimaryButton extends StatelessWidget {
+  const _PrimaryButton({required this.label});
+
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    return FilledButton(
+      onPressed: () {},
+      style: FilledButton.styleFrom(
+        backgroundColor: Colors.white,
+        disabledBackgroundColor: Colors.white,
+        disabledForegroundColor: const Color(0xFF5C3DD2),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+        textStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.w800),
+      ),
+      child: Text(label),
+    );
+  }
+}
